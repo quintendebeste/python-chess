@@ -52,10 +52,6 @@ def draw_background():
     screen.fill(pg.Color("burlywood2"))
     pg.draw.rect(screen, pg.Color("burlywood4"), pg.Rect(15, 15, 720, 720), 7)
     i = 1
-    # while (i * 80) < 720:
-    #     pg.draw.line(screen, pg.Color("black"), pg.Vector2((i * 80) + 15, 15), pg.Vector2((i * 80) + 15, 735), 5)
-    #     pg.draw.line(screen, pg.Color("black"), pg.Vector2(15, (i * 80) + 15), pg.Vector2(735, (i * 80) + 15), 5)
-    #     i += 1
     for i in range(1, 8):
         pg.draw.line(screen, pg.Color("burlywood4"), pg.Vector2((i * 90) + 15, 15), pg.Vector2((i * 90) + 15, 730), 2)
         pg.draw.line(screen, pg.Color("burlywood4"), pg.Vector2(15, (i * 90) + 15), pg.Vector2(730, (i * 90) + 15), 2)
