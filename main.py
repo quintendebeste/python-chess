@@ -45,7 +45,6 @@ def draw_pieces():
             if output != 'Null':
                 if output in chess_pieces:
                     output = chess_pieces[output]
-                    print(output)
                 piece_surface = font.render(output, True, pg.Color('black'))
                 screen.blit(piece_surface, (col * 90 + offset + 5, row * 90 + offset - 2))
 
