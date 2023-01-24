@@ -7,8 +7,8 @@ pg.font.init()
 playing = True
 
 #tile fill list
-set_font = pg.font.match_font("Arial Unicode MS")
-font = pg.font.Font(set_font, 25)
+set_font = pg.font.match_font("Segoe UI Symbol")
+font = pg.font.Font(set_font, 45)
 chess_pieces = {
     'b_checker': u'\u25FB',
     'b_pawn': u'\u265F',
@@ -26,7 +26,7 @@ chess_pieces = {
     'w_queen': u'\u2655'
 }
 
-number_grid = [
+chess_grid = [
     ['b_rook', 'b_knight', 'b_bishop', 'b_queen', 'b_king', 'b_bishop', 'b_knight', 'b_rook'],
     ['b_pawn', 'b_pawn', 'b_pawn', 'b_pawn', 'b_pawn', 'b_pawn', 'b_pawn', 'b_pawn'],
     ['Null', 'Null', 'Null', 'Null', 'Null', 'Null', 'Null', 'Null'],
@@ -41,10 +41,11 @@ def draw_pieces():
     offset = 35
     for row in range(8):
         for col in range(8):
-            output = number_grid[row][col]
+            output = chess_grid[row][col]
             if output != 'Null':
                 if output in chess_pieces:
                     output = chess_pieces[output]
+                    print(output)
                 piece_surface = font.render(output, True, pg.Color('black'))
                 screen.blit(piece_surface, (col * 90 + offset + 5, row * 90 + offset - 2))
 
