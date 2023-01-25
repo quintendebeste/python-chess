@@ -1,14 +1,33 @@
-import sys, pygame as pg
+import sys, pygame as pg,time
 
 pg.init()
 screen_size = 750,750
 screen = pg.display.set_mode(screen_size)
 pg.font.init()
 playing = True
+def draw_nodes(start_pos,end_pos,line_length,vertical):
+    start_pos = start_pos
+    end_pos = end_pos
+    space_between_nodes = line_length / 8
+    vertical = vertical
+    if(vertical == True):
+        for i in range(10):
+            pg.draw.circle(screen, (255,0,0), (start_pos[0], start_pos[1] + (i * space_between_nodes)), 10)
+            print("vert",start_pos[0], start_pos[1] + (i * space_between_nodes))
+
+    elif(vertical != True):
+        for i in range(10):
+            pg.draw.circle(screen, (255,0,0), (start_pos[0] + (i * space_between_nodes), start_pos[1]), 10)
+            print("hori", start_pos[0], start_pos[1] + (i * space_between_nodes))
+        #sys.exit()
+
+
+
+
 
 #tile fill list
 set_font = pg.font.match_font("Segoe UI Symbol")
-font = pg.font.Font(set_font, 45)
+font = pg.font.Font(set_font, 42)
 chess_pieces = {
     'b_checker': u'\u25FB',
     'b_pawn': u'\u265F',
@@ -53,8 +72,18 @@ def draw_background():
     pg.draw.rect(screen, pg.Color("burlywood4"), pg.Rect(15, 15, 720, 720), 7)
     i = 1
     for i in range(1, 8):
-        pg.draw.line(screen, pg.Color("burlywood4"), pg.Vector2((i * 90) + 15, 15), pg.Vector2((i * 90) + 15, 730), 2)
-        pg.draw.line(screen, pg.Color("burlywood4"), pg.Vector2(15, (i * 90) + 15), pg.Vector2(730, (i * 90) + 15), 2)
+        #vertical lines
+        Vstrt_pos = pg.Vector2((i * 90) + 15, 15)
+        Vend_pos = pg.Vector2((i * 90) + 15, 730)
+        line_length = 715
+        pg.draw.line(screen, pg.Color("burlywood4"), Vstrt_pos, Vend_pos, 2)
+        draw_nodes(Vstrt_pos,Vend_pos,line_length,True)
+
+        #horizontal lines
+        Hstrt_pos = pg.Vector2(15, (i * 90) + 15)
+        Hend_pos = pg.Vector2(730, (i * 90) + 15)
+        pg.draw.line(screen, pg.Color("burlywood4"), Hstrt_pos, Hend_pos, 2)
+        draw_nodes(Hstrt_pos,Hend_pos,line_length,False)
 
 def game_loop():
     for event in pg.event.get():
@@ -66,4 +95,5 @@ def game_loop():
     pg.display.flip()
 
 while playing:
+    mouse = pg.mouse.get_pos()
     game_loop() 
