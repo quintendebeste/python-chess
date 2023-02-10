@@ -7,18 +7,10 @@ pg.font.init()
 playing = True
 green = (0,255,0)
 red = (255,0,0)
+active_piece = 'Null'
+active_piece_row = -1
+active_piece_col = -1
 
-
-# draws nodes on the same spot as the chesspieces using the "chess_pieces" list for the location of the pieces
-def draw_nodes():
-    offset = 55
-    for row in range(8):
-        for col in range(8):
-            output = chess_grid[row][col]
-            if output != 'Null':
-                if output in chess_pieces:
-                    output = chess_pieces[output]
-                pg.draw.circle(screen, red, (col * 90 + offset + 5, row * 90 + offset - 2), 10)
 
 # checks the position of the mouse and if the position is equal to the position of a node and if its clicked
 def mouse_detection():
@@ -30,7 +22,7 @@ def mouse_detection():
                 node_x = col * 90 + 55 + 5
                 node_y = row * 90 + 55 - 2
                 node_rect = pg.Rect(node_x - 25, node_y - 25, 50, 50)
-                pg.draw.rect(screen, red, node_rect)
+                #pg.draw.rect(screen, red, node_rect)
                 if node_rect.collidepoint(mouse_pos):
                     if pg.mouse.get_pressed()[0]:
                         if output in chess_pieces:
@@ -38,17 +30,34 @@ def mouse_detection():
                             return output,row,col
 
 # a function wich shows the possible moves according to the clicked piece in the "mouse_detection" function
-def moves_show(piece,row,col):
-    offset = 55
+def moves_show(piece,row,col,chess_grid):
+    mouse_pos = pg.mouse.get_pos()
+    offset = 50
     piece = piece
-    row = row
-    col = col
-    print(piece,f"location: (row:{row},column:{col})")
-    if(piece == chess_pieces['w_pawn']):
+    piece_row = row
+    piece_col = col
+    move_row = piece_row
+    move_col = piece_col
+    chess_grid = chess_grid
+    moved = False
+    print(piece,f"location: (row:{piece_row},column:{piece_col})")
+    if(piece == chess_pieces['w_pawn'] and moved == False):
         for i in range(2):
-            row -= 1
-            pg.draw.circle(screen, green, (col * 90 + offset + 5, row * 90 + offset - 2), 10)
-            print("move")
+            move_row -= 1
+            chess_grid[move_row][move_col] = 'move'
+            
+    
+    for row in range(8):
+        for col in range(8):
+            if(chess_grid[row][col] == 'move'):
+                moves_node = pg.Rect(col * 90 + offset + 2, row * 90 + offset, 20, 20)
+                pg.draw.rect(screen, green, moves_node)
+                if moves_node.collidepoint(mouse_pos):
+                    if pg.mouse.get_pressed()[0]:
+                        chess_grid[piece_row][piece_col] = 'Null'
+                        chess_grid[row][col] = piece
+                        
+                
 
 
 
@@ -92,7 +101,7 @@ def draw_pieces():
     for row in range(8):
         for col in range(8):
             output = chess_grid[row][col]
-            if output != 'Null':
+            if output != 'Null' and output != 'move':
                 if output in chess_pieces:
                     output = chess_pieces[output]
                 piece_surface = font.render(output, True, pg.Color('black'))
@@ -116,21 +125,29 @@ def draw_background():
         pg.draw.line(screen, pg.Color("burlywood4"), Hstrt_pos, Hend_pos, 2)
 
 # a function wich represents a basic gameloop that's running all the previous functions one after another
-def game_loop():
+def game_loop(active_piece,active_piece_row,active_piece_col,chess_grid):
+    active_piece = active_piece
+    active_piece_row = active_piece_row
+    active_piece_col = active_piece_col
+    chess_grid = chess_grid
+
     for event in pg.event.get():
         if event.type == pg.QUIT:
              sys.exit()
 
     draw_background()
     draw_pieces()
-    #draw_nodes()
-    mouse_detection()
-    piece,row,col = mouse_detection()
-    if(piece):
-        moves_show(piece,row,col)
+    if(mouse_detection()):
+        active_piece = mouse_detection()[0]
+        active_piece_row = mouse_detection()[1]
+        active_piece_col = mouse_detection()[2]
+
+    moves_show(active_piece,active_piece_row,active_piece_col,chess_grid)
     pg.display.flip()
+    return active_piece,active_piece_row,active_piece_col
+
 
 # a while loop that keeps looping the game_loop function until the window is closed
 while playing:
     mouse = pg.mouse.get_pos()
-    game_loop() 
+    active_piece,active_piece_row,active_piece_col = game_loop(active_piece,active_piece_row,active_piece_col,chess_grid) 
